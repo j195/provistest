@@ -8,6 +8,8 @@ class WelcomeController extends Controller
 {
     public function index(Request $request)
     {
-        echo \Request::getClientIp(true);
+        //echo \Request::getClientIp(true);
+        $clientIP = $_SERVER['REMOTE_ADDR'];
+        echo $clientIP;
     }
 }
