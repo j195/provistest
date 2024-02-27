@@ -91,10 +91,13 @@ class LoginRegisterController extends Controller
             $ipadd = $_SERVER['REMOTE_ADDR'];
             $record = UserLoginAttempt::where('user_id','=',$id)->where('ip_address','=',$ipadd)->first();
             //print_r($record['user_id']);die;
-            if($record['user_id']){
-                return redirect()->route('dashboard')
-                ->withSuccess('You have successfully logged in!');
+            if(!empty($record) && $record['user_id']  !== null){
+                echo "need to logout";
             }else {
+                UserLoginAttempt::create([
+                    'user_id' => Auth::id(),
+                    'ip_address' => $_SERVER['REMOTE_ADDR'],
+                ]);
                 $request->session()->regenerate();
             return redirect()->route('dashboard')
                 ->withSuccess('You have successfully logged in!');
@@ -136,7 +139,8 @@ class LoginRegisterController extends Controller
     {
         $id = Auth::id();
         $record = UserLoginAttempt::where('user_id',$id)->first();
-        if($record['user_id']){
+
+        if(!empty($record) && $record['user_id']  !== null){
             $record->delete();
         }
         Auth::logout();
