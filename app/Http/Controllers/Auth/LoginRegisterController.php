@@ -85,23 +85,24 @@ class LoginRegisterController extends Controller
             'password' => 'required'
         ]);
 
+        $findUserID = User::where('email',$request->email)->first();
+        $ipadd = $_SERVER['REMOTE_ADDR'];
+        $record = UserLoginAttempt::where('user_id','=',$findUserID->id)->where('ip_address','=',$ipadd)->first();
+        if(!empty($record) && $record->user_id == $findUserID->id){
+            return back()->withErrors([
+                'message' => 'You are already loggedIn.Try clearing old session and retry',
+            ]);
+        }
         if(Auth::attempt($credentials))
         {
-            $id = Auth::id();
-            $ipadd = $_SERVER['REMOTE_ADDR'];
-            $record = UserLoginAttempt::where('user_id','=',$id)->where('ip_address','=',$ipadd)->first();
-            //print_r($record['user_id']);die;
-            if(!empty($record) && $record['user_id']  !== null){
-                echo "need to logout";
-            }else {
-                UserLoginAttempt::create([
-                    'user_id' => Auth::id(),
-                    'ip_address' => $_SERVER['REMOTE_ADDR'],
-                ]);
+            UserLoginAttempt::create([
+                'user_id' => Auth::id(),
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+            ]);
+
                 $request->session()->regenerate();
             return redirect()->route('dashboard')
                 ->withSuccess('You have successfully logged in!');
-            }
 
         }
 
