@@ -89,9 +89,17 @@ class LoginRegisterController extends Controller
         $ipadd = $_SERVER['REMOTE_ADDR'];
         $record = UserLoginAttempt::where('user_id','=',$findUserID->id)->where('ip_address','=',$ipadd)->first();
         if(!empty($record) && $record->user_id == $findUserID->id){
-            return back()->withErrors([
-                'message' => 'You are already loggedIn.Try clearing old session and retry',
-            ]);
+            //return back()->withErrors([
+            //    'message' => 'You are already loggedIn.Try clearing old session and retry',
+            //]);
+            if($request->confirmed == 1){
+                Auth::setUser($findUserID)->logoutOtherDevices($request->get('password'));
+                $res = UserLoginAttempt::where('user_id',$findUserID->id)->delete();
+
+            }else {
+                return redirect()->back() ->with('alert', 'You are already loggedin');
+            }
+
         }
         if(Auth::attempt($credentials))
         {

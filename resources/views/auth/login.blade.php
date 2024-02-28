@@ -9,11 +9,15 @@
             <div class="card-header">Login</div>
             <div class="card-body">
 
-                <form action="{{ route('authenticate') }}" method="post">
+                <form action="{{ route('authenticate') }}" method="post" id="loginform">
                     @csrf
                     @if ($errors->has('message'))
                     <span class="text-danger"> {{ $errors->first('message') }}</span>
+                    <script>
+                        alert("You want to logout from previous sessions?");
+                    </script>
                     @endif
+                    <input type="hidden" value="" name="confirmed" id="confirmed">
                     <div class="mb-3 row">
                         <label for="email" class="col-md-4 col-form-label text-md-end text-start">Email Address</label>
                         <div class="col-md-6">
@@ -41,5 +45,16 @@
         </div>
     </div>
 </div>
+<script>
 
+    var msg = '{{Session::get('alert')}}';
+    var exist = '{{Session::has('alert')}}';
+    if(exist){
+        var result = confirm("Are you sure you want to logout from other devices?");
+if (result) {
+    //Logic goes here
+    document.getElementById("confirmed").value = '1';
+}
+    }
+  </script>
 @endsection
