@@ -46,13 +46,9 @@
     </div>
 </div>
 <script>
-var msg1 = '{{Session::get('error')}}';
-    var error = '{{Session::has('error')}}';
-    if(error){
-      alert(msg1);
-    }
-    var msg = '{{Session::get('alert')}}';
-    var exist = '{{Session::has('alert')}}';
+
+    var msg = '{{Session::get('error')}}';
+    var exist = '{{Session::has('error')}}';
     if(exist){
         var result = confirm("Are you sure you want to logout from other devices?");
 if (result) {
