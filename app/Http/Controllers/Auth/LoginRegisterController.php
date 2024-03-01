@@ -87,7 +87,8 @@ class LoginRegisterController extends Controller
 
         $findUserID = User::where('email',$request->email)->first();
         $ipadd = $_SERVER['REMOTE_ADDR'];
-        $record = UserLoginAttempt::where('user_id','=',$findUserID->id)->where('ip_address','=',$ipadd)->first();
+        if(!empty($findUserID) && $findUserID->email == $request->email){
+            $record = UserLoginAttempt::where('user_id','=',$findUserID->id)->where('ip_address','=',$ipadd)->first();
         if(!empty($record) && $record->user_id == $findUserID->id){
             //return back()->withErrors([
             //    'message' => 'You are already loggedIn.Try clearing old session and retry',
@@ -99,7 +100,11 @@ class LoginRegisterController extends Controller
             }else {
                 return redirect()->back()->with('error', 'You are already loggedin with the same account');
             }
+        }
 
+
+        }else {
+            return redirect()->back()->with('error', 'No Email found');
         }
         if(Auth::attempt($credentials))
         {
