@@ -46,7 +46,11 @@
     </div>
 </div>
 <script>
-
+var msg1 = '{{Session::get('error')}}';
+    var error = '{{Session::has('error')}}';
+    if(error){
+      alert(msg1);
+    }
     var msg = '{{Session::get('alert')}}';
     var exist = '{{Session::has('alert')}}';
     if(exist){

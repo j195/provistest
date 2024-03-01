@@ -97,7 +97,7 @@ class LoginRegisterController extends Controller
                 $res = UserLoginAttempt::where('user_id',$findUserID->id)->delete();
 
             }else {
-                return redirect()->back() ->with('alert', 'You are already loggedin');
+                return redirect()->back()->with('error', 'You are already loggedin with the same account');
             }
 
         }
